@@ -11,18 +11,21 @@ public class JdbcRunner {
         Class<Driver> driverClass = Driver.class;
 
         String sql = """
-                create table if not exists game.info (
-                    id serial primary key,
-                    data text not null 
-                    );
+                insert into game.info (data)
+                values 
+                ('Test1'),
+                ('Test2'),
+                ('Test3'),
+                ('Test4');
                 """;
 
         try (var connection = ConnectionManager.open();
              var statement = connection.createStatement()) {
 
             System.out.println(connection.getTransactionIsolation());
-            final var executeResult = statement.execute(sql);
+            final var executeResult = statement.executeUpdate(sql);
             System.out.println(executeResult);
+            System.out.println(statement.getUpdateCount());
         }
     }
 }
