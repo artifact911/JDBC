@@ -11,19 +11,18 @@ public class JdbcRunner {
         Class<Driver> driverClass = Driver.class;
 
         String sql = """
-                insert into game.info (data)
-                values 
-                ('Test1'),
-                ('Test2'),
-                ('Test3'),
-                ('Test4');
+                update game.info 
+                set data = 'TestTest'
+                where id = 5
+                returning *
+               
                 """;
 
         try (var connection = ConnectionManager.open();
              var statement = connection.createStatement()) {
 
             System.out.println(connection.getTransactionIsolation());
-            final var executeResult = statement.executeUpdate(sql);
+            final var executeResult = statement.execute(sql);
             System.out.println(executeResult);
             System.out.println(statement.getUpdateCount());
         }
