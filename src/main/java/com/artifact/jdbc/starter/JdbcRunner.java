@@ -32,32 +32,30 @@ public class JdbcRunner {
 
             // позволит нам доставать метаинформацию
             var metaData = connection.getMetaData();
-
             // можем получить все подключенные БД
             var catalogs = metaData.getCatalogs();
+
             while (catalogs.next()) {
-                System.out.println(catalogs.getString(1));
+                var catalog = catalogs.getString(1);
+                var schemas = metaData.getSchemas();
+
+                while (schemas.next()) {
+                    var schema = schemas.getString("TABLE_SCHEM");
+
+                    // вернул все сущности
+//                    var tables = metaData.getTables(catalog, schema, "%", null);
+
+                    // хочу получить только таблицы
+                    var tables = metaData.getTables(catalog, schema, "%", new String[] {"TABLE"});
+
+                    if (schema.equals("public")) {
+                        while (tables.next()) {
+                            // параметр взят из доки к методу getTables();
+                            System.out.println(tables.getString("TABLE_NAME"));
+                        }
+                    }
+                }
             }
-
-            var schemas = metaData.getSchemas();
-            while (schemas.next()) {
-
-                // имена мы взяли из доки метода getSchemas();
-                System.out.println(schemas.getString("TABLE_SCHEM"));
-//                System.out.println(schemas.getString("TABLE_CATALOG"));
-            }
-
-            // вызов этого метода вернет все ТИПЫ таблиц, что у нас есть. Нужно для испрлоьзования в след методе
-            metaData.getTableTypes();
-
-
-            var tables = metaData.getTables(null, null, "%s", null);
-            while (tables.next()) {
-                // параметр взят из доки к методу getTables();
-                System.out.println(tables.getString("TABLE_NAME"));
-            }
-
-
         }
     }
 
