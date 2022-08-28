@@ -3,6 +3,9 @@ package com.artifact.jdbc.starter;
 import com.artifact.jdbc.starter.util.ConnectionManager;
 import lombok.SneakyThrows;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -17,12 +20,49 @@ public class JdbcRunner {
 //        var result = getTicketsByFlightIs(flightId);
 //        System.out.println(result);
 
-        var result = getFlightsBetween(LocalDate.of(2020, 1, 1).atStartOfDay(), LocalDateTime.now());
-        System.out.println(result);
+//        var result = getFlightsBetween(LocalDate.of(2020, 1, 1).atStartOfDay(), LocalDateTime.now());
+//        System.out.println(result);
+
+        checkMetaData();
     }
 
     @SneakyThrows
-    private static List<Long> getFlightsBetween (LocalDateTime start, LocalDateTime end) {
+    public static void checkMetaData() {
+        try (var connection = ConnectionManager.open()) {
+
+            // позволит нам доставать метаинформацию
+            var metaData = connection.getMetaData();
+
+            // можем получить все подключенные БД
+            var catalogs = metaData.getCatalogs();
+            while (catalogs.next()) {
+                System.out.println(catalogs.getString(1));
+            }
+
+            var schemas = metaData.getSchemas();
+            while (schemas.next()) {
+
+                // имена мы взяли из доки метода getSchemas();
+                System.out.println(schemas.getString("TABLE_SCHEM"));
+//                System.out.println(schemas.getString("TABLE_CATALOG"));
+            }
+
+            // вызов этого метода вернет все ТИПЫ таблиц, что у нас есть. Нужно для испрлоьзования в след методе
+            metaData.getTableTypes();
+
+
+            var tables = metaData.getTables(null, null, "%s", null);
+            while (tables.next()) {
+                // параметр взят из доки к методу getTables();
+                System.out.println(tables.getString("TABLE_NAME"));
+            }
+
+
+        }
+    }
+
+    @SneakyThrows
+    private static List<Long> getFlightsBetween(LocalDateTime start, LocalDateTime end) {
         String sql = """
                 select id
                 from flight
