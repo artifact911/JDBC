@@ -32,6 +32,16 @@ public class JdbcRunner {
         try (var connection = ConnectionManager.open();
              var preparedStatement = connection.prepareStatement(sql)) {
 
+            // этот параметр устанавливает количество строк, которые мы возьмём из базы за один раз, чтоб не взять лишнего и не положить
+            // приложение из-за недотсатка памяти. Данные будем получать итерационно
+            preparedStatement.setFetchSize(50);
+
+            // установка тайм-аута для выполнения запроса
+            preparedStatement.setQueryTimeout(10);
+
+            // устанавливаем лимит на количество принимаемых строк
+            preparedStatement.setMaxRows(100);
+
             System.out.println(preparedStatement);
             preparedStatement.setTimestamp(1, Timestamp.valueOf(start));
             System.out.println(preparedStatement);
