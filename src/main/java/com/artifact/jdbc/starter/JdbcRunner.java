@@ -1,6 +1,7 @@
 package com.artifact.jdbc.starter;
 
 import com.artifact.jdbc.starter.util.ConnectionManager;
+import com.artifact.jdbc.starter.util.pool.ConnectionPoolManager;
 import lombok.SneakyThrows;
 
 import java.sql.SQLException;
@@ -19,12 +20,16 @@ public class JdbcRunner {
 //        var result = getFlightsBetween(LocalDate.of(2020, 1, 1).atStartOfDay(), LocalDateTime.now());
 //        System.out.println(result);
 
-        checkMetaData();
+        try {
+            checkMetaData();
+        } finally {
+            ConnectionPoolManager.closePool();
+        }
     }
 
     @SneakyThrows
     public static void checkMetaData() {
-        try (var connection = ConnectionManager.open()) {
+        try (var connection = ConnectionPoolManager.get()) {
 
             // позволит нам доставать метаинформацию
             var metaData = connection.getMetaData();
