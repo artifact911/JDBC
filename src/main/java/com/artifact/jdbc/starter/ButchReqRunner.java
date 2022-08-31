@@ -4,7 +4,6 @@ import com.artifact.jdbc.starter.util.ConnectionManager;
 import lombok.SneakyThrows;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 public class ButchReqRunner {
