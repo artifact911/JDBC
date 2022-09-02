@@ -4,16 +4,33 @@ import com.artifact.jdbc.starter.dao.TicketDao;
 import com.artifact.jdbc.starter.entity.Ticket;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 public class DaoRunner {
 
-   private static final TicketDao ticketDao = TicketDao.getInstance();
+    private static final TicketDao ticketDao = TicketDao.getInstance();
 
     public static void main(String[] args) {
-        Ticket savedTicket = saveTest();
-        System.out.println(savedTicket);
-        var result = ticketDao.delete(savedTicket.getId());
-        System.out.println(result);
+        System.out.println(findAllTest());
+    }
+
+    private static List<Ticket> findAllTest() {
+        return ticketDao.findAll();
+    }
+
+    private static Optional<Ticket> updateTest() {
+        var maybeTicket = ticketDao.findById(2L);
+
+        maybeTicket.ifPresent(ticket -> {
+            ticket.setCost(BigDecimal.valueOf(188.88));
+            ticketDao.update(ticket);
+        });
+        return maybeTicket;
+    }
+
+    private static boolean deleteTest(Ticket savedTicket) {
+        return ticketDao.delete(savedTicket.getId());
     }
 
     private static Ticket saveTest() {
