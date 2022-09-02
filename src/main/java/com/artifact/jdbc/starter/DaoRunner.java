@@ -1,6 +1,7 @@
 package com.artifact.jdbc.starter;
 
 import com.artifact.jdbc.starter.dao.TicketDao;
+import com.artifact.jdbc.starter.dto.TicketFilter;
 import com.artifact.jdbc.starter.entity.Ticket;
 
 import java.math.BigDecimal;
@@ -12,7 +13,11 @@ public class DaoRunner {
     private static final TicketDao ticketDao = TicketDao.getInstance();
 
     public static void main(String[] args) {
-        System.out.println(findAllTest());
+        var ticketFilter = new TicketFilter(3, 0, "Евгений Кудрявцев", "A1");
+
+        var tickets = ticketDao.findAll(ticketFilter);
+        System.out.println(tickets);
+
     }
 
     private static List<Ticket> findAllTest() {
