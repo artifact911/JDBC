@@ -13,11 +13,15 @@ public class DaoRunner {
     private static final TicketDao ticketDao = TicketDao.getInstance();
 
     public static void main(String[] args) {
-        var ticketFilter = new TicketFilter(3, 0, "Евгений Кудрявцев", "A1");
+        var ticket = ticketDao.findById(5L);
+        System.out.println(ticket);
 
+    }
+
+    private static void filterTest() {
+        var ticketFilter = new TicketFilter(3, 0, "Евгений Кудрявцев", "A1");
         var tickets = ticketDao.findAll(ticketFilter);
         System.out.println(tickets);
-
     }
 
     private static List<Ticket> findAllTest() {
@@ -43,7 +47,7 @@ public class DaoRunner {
         var ticket = Ticket.builder()
                            .passengerNo("1234567")
                            .passengerName("Test")
-                           .flightId(3L)
+//                           .flight(3L)
                            .seatNo("B3")
                            .cost(BigDecimal.TEN)
                            .build();
