@@ -4,6 +4,7 @@ import com.artifact.jdbc.starter.util.ConnectionManager;
 import lombok.SneakyThrows;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 public class ButchReqRunner {
@@ -36,7 +37,6 @@ public class ButchReqRunner {
             statement = connection.createStatement();
             statement.addBatch(deleteTicketsSql);
             statement.addBatch(deleteFlightSql);
-
 
             // выполняются все batch-запросы. Возвращается массив результатов выполнения (т.е. int для каждой их наших команд), а
             // следовательно выполнение SELECT для Batch-запросов не используется, а только для DELETE/UPDATE/INSERT или DDL (создания

@@ -1,7 +1,5 @@
 package com.artifact.jdbc.starter.dao;
 
-import com.artifact.jdbc.starter.entity.Ticket;
-
 import java.util.List;
 import java.util.Optional;
 
